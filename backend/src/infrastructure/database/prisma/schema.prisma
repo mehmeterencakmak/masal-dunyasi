@@ -1,0 +1,178 @@
+// ─── VERİTABANI BAĞLANTISI ─────────────────────────────────────────────────
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ─── KULLANICI TABLOSU ──────────────────────────────────────────────────────
+// Opsiyonel kullanıcı kimlik doğrulaması için — anonim kullanım da desteklenir
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String   // bcrypt hash
+  role      String   @default("USER")
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  stories   Story[]
+  comments  Comment[]
+  likes     Like[]
+  feedbacks Feedback[]
+  artworks  Artwork[]
+  artworkReactions ArtworkReaction[]
+}
+
+// ─── HİKAYE TABLOSU ─────────────────────────────────────────────────────────
+// Kullanıcının oluşturduğu her masalı ve agent çıktılarını tutar
+model Story {
+  id        String      @id @default(uuid())
+  userId    String?
+  user      User?       @relation(fields: [userId], references: [id])
+
+  prompt    String      // Kullanıcının girdiği orijinal prompt
+  title     String?     // StoryAgent tarafından üretilen başlık
+  content   String      // Üretilen hikaye metni
+  summary   String?     // Görsel/müzik üretimi için kısa özet
+  mood      String?     // Hikayenin duygusal tonu (magical, adventure, vb.)
+  language  String      @default("tr")
+
+  audioUrl  String?     // TTSAgent çıktısı — MP3 URL
+  imageUrl  String?     // ImageAgent çıktısı — PNG URL
+  musicUrl  String?     // MusicAgent çıktısı — MP3 URL
+  videoUrl  String?     // VideoAgent çıktısı — MP4 URL
+  coloringUrl String?    // Boyama görseli outline — PNG URL
+
+  status        StoryStatus @default(PENDING)
+  views         Int         @default(0)
+  likes         Int         @default(0)
+  likesThumbsUp Int         @default(0)
+  likesStars    Int         @default(0)
+  commentsCount Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Moderation fields
+  reports          Int         @default(0)
+  moderationStatus String      @default("APPROVED") // APPROVED, REPORTED, BLOCKED
+
+  jobs      GenerationJob[]
+  comments  Comment[]
+  likesList Like[]
+  artworks  Artwork[]
+}
+
+// ─── YORUM TABLOSU ───────────────────────────────────────────────────────────
+// Her üye yorumu burada saklanır
+model Comment {
+  id        String   @id @default(uuid())
+  storyId   String
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime @default(now())
+
+  // Moderation fields
+  reports   Int      @default(0)
+  status    String   @default("APPROVED") // APPROVED, REPORTED, BLOCKED
+}
+
+// ─── BEĞENİ TABLOSU ──────────────────────────────────────────────────────────
+model Like {
+  id        String   @id @default(uuid())
+  storyId   String
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, storyId])
+}
+
+// ─── AGENT İŞ TABLOSU ───────────────────────────────────────────────────────
+// Her agent tetiklendiğinde bir GenerationJob kaydı oluşur
+// Bu sayede WebSocket ile canlı durum takibi yapılabilir
+model GenerationJob {
+  id        String    @id @default(uuid())
+  storyId   String
+  story     Story     @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  agentType AgentType
+  status    JobStatus @default(QUEUED)
+  result    String?   // JSON olarak agent çıktısı (URL vb.)
+  error     String?   // Hata mesajı — kullanıcıya gösterilmez, sadece log için
+
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// ─── ENUM'LAR ────────────────────────────────────────────────────────────────
+
+enum StoryStatus {
+  PENDING     // Henüz işlenmedi
+  PROCESSING  // En az bir agent çalışıyor
+  COMPLETED   // Tüm istenen agentlar tamamlandı
+  FAILED      // Kritik hata — hikaye üretilemedi
+}
+
+enum AgentType {
+  STORY   // Hikaye metni üretimi (OpenAI GPT-4o)
+  TTS     // Sesli okuma (ElevenLabs)
+  IMAGE   // Görsel üretimi (DALL-E 3 / Stable Diffusion)
+  MUSIC   // Müzik üretimi (Replicate MusicGen)
+  VIDEO   // Video üretimi (Replicate SVD / Luma AI)
+  COLORING // Boyama görseli üretimi (Pollinations AI Outline)
+}
+
+enum JobStatus {
+  QUEUED      // Kuyruğa alındı, henüz başlamadı
+  RUNNING     // Agent aktif olarak çalışıyor
+  COMPLETED   // Başarıyla tamamlandı
+  FAILED      // Hata ile sonlandı
+}
+
+// ─── GERİ BİLDİRİM TABLOSU ───────────────────────────────────────────────────
+model Feedback {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  rating    Int      @default(5)
+  role      String   @default("Ebeveyn")
+  createdAt DateTime @default(now())
+}
+
+// ─── BOYAMA ESERLERİ TABLOSU (ARTWORK TABLE) ──────────────────────────────────
+model Artwork {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storyId   String
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  imageUrl  String   // Kaydedilen boyanmış resmin yerel URL'i (/uploads/artworks/...)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  reactions ArtworkReaction[]
+}
+
+// ─── BOYAMA REAKSİYON TABLOSU (ARTWORK REACTION TABLE) ────────────────────────
+model ArtworkReaction {
+  id        String   @id @default(uuid())
+  artworkId String
+  artwork   Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // "LIKE", "HEART", "STAR", "CLAP"
+  createdAt DateTime @default(now())
+
+  @@unique([artworkId, userId, type])
+}
+

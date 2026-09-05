@@ -1,0 +1,51 @@
+{
+  "name": "masal-dunyasi-backend",
+  "version": "1.0.0",
+  "description": "Masal Dünyası — AI destekli masal üretim platformu backend",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "nodemon --exec ts-node src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "migrate": "prisma migrate dev",
+    "generate": "prisma generate",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "prisma": "^5.7.0",
+    "@prisma/client": "^5.7.0",
+    "openai": "^4.20.0",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "zod": "^3.22.4",
+    "winston": "^3.11.0",
+    "socket.io": "^4.6.1",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.2",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20.10.4",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/multer": "^1.4.11",
+    "@types/uuid": "^9.0.7",
+    "ts-node": "^10.9.2",
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.11",
+    "ts-jest": "^29.1.1",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0"
+  }
+}
