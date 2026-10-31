@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { storyApi, feedbackApi, Story, Feedback } from '../services/api'
 import { useToast } from '../components/ui/Toast'
 import { useAuth } from '../context/AuthContext'
+import NightCover from '../components/story/NightCover'
 import { 
   Sparkles, 
   Calendar, 
@@ -13,22 +14,18 @@ import {
   ChevronRight,
   BookOpen,
   ShieldCheck,
-  Zap,
-  ArrowRight,
   Trash2,
-  Edit3
+  Edit3,
+  Heart,
+  ThumbsUp
 } from 'lucide-react'
 
 const MOOD_GRADIENTS: Record<string, string> = {
-  magical: 'linear-gradient(135deg, #0284c7, #3b82f6)',
-  adventure: 'linear-gradient(135deg, #f97316, #ea580c)',
-  funny: 'linear-gradient(135deg, #10b981, #f59e0b)',
-  romantic: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
-  educational: 'linear-gradient(135deg, #06b6d4, #10b981)',
-}
-
-const MOOD_EMOJIS: Record<string, string> = {
-  magical: '✨', adventure: '🗺️', funny: '🎭', romantic: '🌸', educational: '📚',
+  magical: '#1E2858',
+  adventure: '#1E2858',
+  funny: '#1E2858',
+  romantic: '#1E2858',
+  educational: '#1E2858',
 }
 
 const MOOD_LABELS: Record<string, string> = {
@@ -329,22 +326,22 @@ export default function HomePage() {
       </div>
       
       <h1 className="hero-title">
-        Çocuklar İçin Yapay Zeka Destekli<br />Sihirli Masal Diyarı
+        Uyku vakti geldi.<br />Bu geceki masal sizden.
       </h1>
       <p className="hero-sub" style={{ marginBottom: '32px' }}>
-        Kendi kahramanını seç, dünyanı belirle ve anında kişiselleştirilmiş, görsel kapaklı ve seslendirmeli masalları keşfetmeye başla!
+        Kahramanını ve dünyasını seç; yapay zeka saniyeler içinde kapak resmiyle ve sesli okumasıyla kişisel bir masal hazırlasın.
       </p>
 
       {/* İNTERAKTİF HIZLI BAŞLANGIÇ KARTI */}
       <form onSubmit={handleQuickStartSubmit} className="hero-quick-start-card">
         <div className="quick-start-title-box">
           <Sparkles size={18} style={{ color: 'var(--secondary)' }} />
-          <h3 className="quick-start-title">Hızlı Masal Odası — Aklındaki fikri yaz, gerisini sihre bırak!</h3>
+          <h3 className="quick-start-title">Hızlı Masal Odası — aklındaki fikri yaz</h3>
         </div>
         <div className="quick-start-textarea-wrapper">
           <textarea
             className="quick-start-textarea"
-            placeholder="Nasıl bir masal hayal ediyorsun? (Örn: Çikolata yemeyi çok seven tatlı bir ejderha bulut şatosunda kaybolmuş...)"
+            placeholder="Örn. Uzayda kaybolan, şarkı söyleyen bir robot…"
             value={quickPrompt}
             onChange={(e) => setQuickPrompt(e.target.value)}
           />
@@ -352,10 +349,10 @@ export default function HomePage() {
         <div className="quick-start-tags-label">veya sihirli hazır konulardan birini seç:</div>
         <div className="quick-start-tags-container">
           {[
-            'Uykusu kaçan tatlı ejderha 🐉',
-            'Uzayda kaybolan ve şarkı söyleyen robot 🤖',
-            'Bulut şatosundaki gizemli kütüphane 🏰',
-            'Şeker köyünün kayıp renkli taşları 🍬'
+            'Uykusu kaçan tatlı ejderha',
+            'Uzayda kaybolan ve şarkı söyleyen robot',
+            'Bulut şatosundaki gizemli kütüphane',
+            'Şeker köyünün kayıp renkli taşları'
           ].map((tag) => (
             <button
               key={tag}
@@ -368,92 +365,71 @@ export default function HomePage() {
           ))}
         </div>
         <button type="submit" className="quick-start-btn">
-          <span>Sihirli Masal Odasına Gir & Yaz</span>
-          <ArrowRight size={18} />
+          <Sparkles size={18} />
+          <span>Masalı Yaz</span>
         </button>
       </form>
 
       {/* DETAYLI ÖZELLİKLER BÖLÜMÜ */}
       <div style={{ margin: '40px 0 80px' }}>
         <h3 className="section-subtitle-center" style={{ fontSize: '32px', marginBottom: '40px' }}>
-          🌟 Masal Diyarı Neler Sunuyor?
+          Masal Diyarı neler sunuyor?
         </h3>
         <div className="steps-grid">
           <div className="step-card" style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }}>
-            <div className="step-icon" style={{ background: 'rgba(2, 132, 199, 0.08)', width: '70px', height: '70px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-              <Zap size={32} style={{ color: 'var(--primary)' }} />
+            <div className="step-icon" style={{ background: 'rgba(242, 193, 78, 0.08)', width: '70px', height: '70px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+              <BookOpen size={30} style={{ color: 'var(--primary)' }} />
             </div>
-            <h4 className="step-title" style={{ fontSize: '20px', fontWeight: '700' }}>Kişiselleştirilmiş Hikaye</h4>
+            <h4 className="step-title" style={{ fontSize: '20px', fontWeight: '700' }}>Kişiselleştirilmiş hikaye</h4>
             <p className="step-desc">Seçtiğiniz karakter ve mekana uygun olarak yapay zeka benzersiz maceralar kaleme alır.</p>
           </div>
           
           <div className="step-card" style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }}>
-            <div className="step-icon" style={{ background: 'rgba(249, 115, 22, 0.08)', width: '70px', height: '70px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-              <Sparkles size={32} style={{ color: 'var(--secondary)' }} />
+            <div className="step-icon" style={{ background: 'rgba(242, 193, 78, 0.08)', width: '70px', height: '70px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+              <Volume2 size={30} style={{ color: 'var(--primary)' }} />
             </div>
-            <h4 className="step-title" style={{ fontSize: '20px', fontWeight: '700' }}>AI Kapak Çizimi & Ses</h4>
-            <p className="step-desc">Masalınıza özel görseller tasarlanır ve sesli okuma entegrasyonu ile dinleme keyfi sunulur.</p>
+            <h4 className="step-title" style={{ fontSize: '20px', fontWeight: '700' }}>Kapak çizimi ve sesli okuma</h4>
+            <p className="step-desc">Her masala özel bir kapak resmi çizilir; ışıklar söndüğünde masalı sesli dinleyin.</p>
           </div>
           
           <div className="step-card" style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }}>
-            <div className="step-icon" style={{ background: 'rgba(16, 185, 129, 0.08)', width: '70px', height: '70px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-              <ShieldCheck size={32} style={{ color: 'var(--success)' }} />
+            <div className="step-icon" style={{ background: 'rgba(242, 193, 78, 0.08)', width: '70px', height: '70px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+              <ShieldCheck size={30} style={{ color: 'var(--primary)' }} />
             </div>
-            <h4 className="step-title" style={{ fontSize: '20px', fontWeight: '700' }}>%100 Güvenli İçerik</h4>
-            <p className="step-desc">Gelişmiş güvenlik filtreleriyle pedagojik açıdan tamamen temiz ve eğitici masallar üretilir.</p>
+            <h4 className="step-title" style={{ fontSize: '20px', fontWeight: '700' }}>Çocuklara güvenli içerik</h4>
+            <p className="step-desc">Güvenlik filtreleri, yaşa uygun ve olumsuz öğe içermeyen masallar üretir.</p>
           </div>
         </div>
       </div>
 
       {/* NASIL ÇALIŞIR BÖLÜMÜ */}
       <div className="how-it-works" style={{ margin: '80px 0' }}>
-        <h3 className="section-subtitle-center" style={{ fontSize: '32px' }}>✨ Sihir Nasıl Gerçekleşiyor?</h3>
+        <h3 className="section-subtitle-center" style={{ fontSize: '32px' }}>Sihir nasıl gerçekleşiyor?</h3>
         <div className="steps-grid">
           <div className="step-card" style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
             <div className="step-number" style={{ background: 'var(--primary)' }}>1</div>
-            <div className="step-icon" style={{ fontSize: '36px' }}>✍️</div>
-            <h4 className="step-title">Hayal Et & Seç</h4>
+            <h4 className="step-title">Hayal et ve seç</h4>
             <p className="step-desc">Kahramanını, geçeceği mekanı ve masalın temasını belirle veya detayları yaz.</p>
           </div>
           <div className="step-card" style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
-            <div className="step-number" style={{ background: 'var(--secondary)' }}>2</div>
-            <div className="step-icon" style={{ fontSize: '36px' }}>🧙</div>
-            <h4 className="step-title">Yapay Zeka Yazsın</h4>
+            <div className="step-number" style={{ background: 'var(--primary)' }}>2</div>
+            <h4 className="step-title">Yapay zeka yazsın</h4>
             <p className="step-desc">Gelişmiş modeller saniyeler içinde masalını yazıp, kapak resmini çizsin.</p>
           </div>
           <div className="step-card" style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
-            <div className="step-number" style={{ background: '#10b981' }}>3</div>
-            <div className="step-icon" style={{ fontSize: '36px' }}>🎧</div>
-            <h4 className="step-title">Oku, Dinle, İzle</h4>
-            <p className="step-desc">Masalını sesli olarak dinle, rengarenk görseline göz at veya kütüphanene kaydet.</p>
+            <div className="step-number" style={{ background: 'var(--primary)' }}>3</div>
+            <h4 className="step-title">Oku, dinle, sakla</h4>
+            <p className="step-desc">Masalı birlikte okuyun, sesli dinleyin ya da kütüphanene kaydet.</p>
           </div>
         </div>
       </div>
 
-      {/* SİHİRLİ İSTATİSTİKLER BANDI (YENİ YERİ) */}
-      <div className="stats-band" style={{ marginBottom: '80px' }}>
-        <div className="stats-item">
-          <div className="stats-number">50,000+</div>
-          <div className="stats-label">Anlatılan Masal</div>
-          <div className="stats-desc">Yapay zeka büyüsüyle yazılan özgün masallar</div>
-        </div>
-        <div className="stats-item">
-          <div className="stats-number">15,000+</div>
-          <div className="stats-label">Mutlu Çocuk</div>
-          <div className="stats-desc">Uyumadan önce masallarla buluşan minikler</div>
-        </div>
-        <div className="stats-item">
-          <div className="stats-number">500+</div>
-          <div className="stats-label">Özgün Karakter</div>
-          <div className="stats-desc">Ejderhalardan astronotlara sihirli dostlar</div>
-        </div>
-      </div>
 
       {/* SON MASALLAR GRİDİ */}
       {recentStories.length > 0 && (
         <div className="recent-tales-section" style={{ margin: '80px 0' }}>
           <div className="recent-tales-header">
-            <h3 className="recent-tales-title" style={{ fontSize: '32px' }}>📚 Son Üretilen Sihirli Masallar</h3>
+            <h3 className="recent-tales-title" style={{ fontSize: '32px' }}>Son yazılan masallar</h3>
             <Link to="/library" className="view-all-link">
               <span>Kitaplığın Tamamı</span>
               <ChevronRight size={16} />
@@ -463,7 +439,6 @@ export default function HomePage() {
           <div className="library-grid">
             {recentStories.map(s => {
               const mood = s.mood || 'magical'
-              const emoji = MOOD_EMOJIS[mood] || '✨'
               const gradient = MOOD_GRADIENTS[mood] || MOOD_GRADIENTS.magical
               const category = MOOD_LABELS[mood] || 'Masal'
               
@@ -474,7 +449,7 @@ export default function HomePage() {
                     {s.imageUrl ? (
                       <img src={s.imageUrl} alt={s.title} />
                     ) : (
-                      <span>{emoji}</span>
+                      <NightCover />
                     )}
                   </div>
                   
@@ -486,9 +461,9 @@ export default function HomePage() {
                       <span className="meta-divider">•</span>
                       <span className="meta-date">{formatDate(s.createdAt)}</span>
                       <span className="meta-divider">•</span>
-                      <span className="meta-comments">💬 {s.commentsCount || 0}</span>
+                      <span className="meta-comments">{s.commentsCount || 0} yorum</span>
                       <span className="meta-divider">•</span>
-                      <span className="meta-views">👁️ {s.views || 0}</span>
+                      <span className="meta-views">{s.views || 0} okunma</span>
                     </div>
 
                     <p className="lib-card-summary">
@@ -521,15 +496,15 @@ export default function HomePage() {
                     {/* Instagram Beğeni & İfade Barı */}
                     <div className="card-reaction-bar" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
                       <button className={`reaction-btn ${s.likes > 0 ? 'liked' : ''}`} onClick={(e) => handleLike(e, s.id)} title="Beğen">
-                        <span>❤️</span>
+                        <Heart size={15} />
                         <span>{s.likes || 0}</span>
                       </button>
                       <button className={`reaction-btn ${s.likesThumbsUp > 0 ? 'liked' : ''}`} onClick={(e) => handleLikeThumbsUp(e, s.id)} title="Harika">
-                        <span>👍</span>
+                        <ThumbsUp size={15} />
                         <span>{s.likesThumbsUp || 0}</span>
                       </button>
                       <button className={`reaction-btn ${s.likesStars > 0 ? 'liked' : ''}`} onClick={(e) => handleLikeStars(e, s.id)} title="Sihirli">
-                        <span>✨</span>
+                        <Sparkles size={15} />
                         <span>{s.likesStars || 0}</span>
                       </button>
                     </div>
@@ -543,7 +518,7 @@ export default function HomePage() {
 
       {/* EBEVEYN YORUMLARI BÖLÜMÜ */}
       <div className="testimonials-section">
-        <h3 className="section-subtitle-center" style={{ fontSize: '32px' }}>💬 Mutlu Ailelerimizin Yorumları</h3>
+        <h3 className="section-subtitle-center" style={{ fontSize: '32px' }}>Ailelerin yorumları</h3>
         
         {feedbacksLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
@@ -569,7 +544,7 @@ export default function HomePage() {
                               <span 
                                 key={star} 
                                 onClick={() => setEditingFeedbackRating(star)}
-                                style={{ color: star <= editingFeedbackRating ? '#f59e0b' : '#d1d5db' }}
+                                style={{ color: star <= editingFeedbackRating ? 'var(--primary)' : '#3A4680' }}
                               >
                                 ★
                               </span>
@@ -629,7 +604,7 @@ export default function HomePage() {
                         <div>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                             {/* Yıldız Puanı */}
-                            <div style={{ color: '#f59e0b', fontSize: '18px' }}>
+                            <div style={{ color: 'var(--primary)', fontSize: '18px' }}>
                               {'★'.repeat(fb.rating)}{'☆'.repeat(5 - fb.rating)}
                             </div>
 
@@ -688,7 +663,7 @@ export default function HomePage() {
                           </p>
                         </div>
                         <div className="testimonial-user" style={{ borderTop: '1px solid var(--border)', paddingTop: '14px', marginTop: '10px' }}>
-                          <div className="testimonial-avatar" style={{ background: 'linear-gradient(135deg, var(--primary), var(--secondary))', color: '#ffffff', fontWeight: 'bold' }}>
+                          <div className="testimonial-avatar" style={{ background: 'var(--primary)', color: 'var(--text-dark)', fontWeight: 'bold' }}>
                             {initials}
                           </div>
                           <div className="testimonial-info">
@@ -718,11 +693,11 @@ export default function HomePage() {
                   }}
                   style={{ maxWidth: '280px', margin: '0 auto' }}
                 >
-                  <span>Deneyimini Paylaş ✍️</span>
+                  <span>Deneyimini paylaş</span>
                 </button>
               ) : (
                 <div className="feedback-form-card" style={{ maxWidth: '600px', margin: '20px auto 0', background: 'var(--bg-card-solid)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '30px', boxShadow: 'var(--shadow-lg)', textAlign: 'left' }}>
-                  <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', fontWeight: '800', marginBottom: '8px', color: 'var(--text-main)' }}>✨ Görüşlerinizi Paylaşın</h4>
+                  <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', fontWeight: '800', marginBottom: '8px', color: 'var(--text-main)' }}>Görüşlerinizi paylaşın</h4>
                   <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', marginBottom: '24px' }}>Masal Diyarı hakkındaki deneyimleriniz bizim için çok kıymetli. Miniklerin ve sizin maceralarınızı duymak istiyoruz!</p>
                   
                   <form onSubmit={handleFeedbackSubmit}>
@@ -735,7 +710,7 @@ export default function HomePage() {
                             key={star} 
                             onClick={() => setFeedbackRating(star)}
                             style={{ 
-                              color: star <= feedbackRating ? '#f59e0b' : '#d1d5db',
+                              color: star <= feedbackRating ? 'var(--primary)' : '#3A4680',
                               transition: 'color 0.2s',
                               transform: 'scale(1)',
                             }}
@@ -804,7 +779,7 @@ export default function HomePage() {
                         disabled={feedbackSubmitting || !feedbackContent.trim()}
                         style={{ maxWidth: '180px', padding: '10px 20px' }}
                       >
-                        <span>Gönder ✨</span>
+                        <span>Gönder</span>
                       </button>
                     </div>
                   </form>
@@ -817,14 +792,13 @@ export default function HomePage() {
 
       {/* SIKÇA SORULAN SORULAR */}
       <div className="faq-section" style={{ margin: '80px auto' }}>
-        <h3 className="faq-title" style={{ fontSize: '32px' }}>✨ Sıkça Sorulan Sorular</h3>
+        <h3 className="faq-title" style={{ fontSize: '32px' }}>Sıkça sorulan sorular</h3>
         <div className="faq-list">
           {FAQ_DATA.map((item, idx) => (
             <div key={idx} className={`faq-item ${openFaqIndex === idx ? 'active' : ''}`} style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)' }}>
               <div className="faq-question" onClick={() => toggleFaq(idx)}>
                 <div className="faq-question-text">
-                  <span style={{ color: 'var(--primary)' }}>🤔</span>
-                  <span>{item.question}</span>
+                                    <span>{item.question}</span>
                 </div>
                 <ChevronRight size={18} className="faq-icon" />
               </div>

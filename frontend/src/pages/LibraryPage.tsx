@@ -5,6 +5,7 @@ import { storyApi, Story } from '../services/api'
 import { useToast } from '../components/ui/Toast'
 import { useAuth } from '../context/AuthContext'
 import CustomSelect from '../components/ui/CustomSelect'
+import NightCover from '../components/story/NightCover'
 import { 
   Volume2, 
   Image as ImageIcon, 
@@ -15,20 +16,28 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
-  Lock
+  Lock,
+  Heart,
+  ThumbsUp,
+  Plus
 } from 'lucide-react'
 
 const MOOD_GRADIENTS: Record<string, string> = {
-  magical: 'linear-gradient(135deg, #0284c7, #3b82f6)',
-  adventure: 'linear-gradient(135deg, #f97316, #ea580c)',
-  funny: 'linear-gradient(135deg, #10b981, #f59e0b)',
-  romantic: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
-  educational: 'linear-gradient(135deg, #06b6d4, #10b981)',
+  magical: '#1E2858',
+  adventure: '#1E2858',
+  funny: '#1E2858',
+  romantic: '#1E2858',
+  educational: '#1E2858',
 }
 
-const MOOD_EMOJIS: Record<string, string> = {
-  magical: '✨', adventure: '🗺️', funny: '🎭', romantic: '🌸', educational: '📚',
-}
+const MOOD_FILTERS = [
+  { value: 'all', label: 'Tümü' },
+  { value: 'magical', label: 'Sihirli' },
+  { value: 'adventure', label: 'Macera' },
+  { value: 'funny', label: 'Eğlenceli' },
+  { value: 'romantic', label: 'Duygusal' },
+  { value: 'educational', label: 'Eğitici' },
+]
 
 const MOOD_LABELS: Record<string, string> = {
   magical: 'Sihirli Masal',
@@ -252,11 +261,11 @@ export default function LibraryPage() {
       <>
         <h2 className="section-label">📚 Sihirli Kitaplığım</h2>
         <div className="empty-state">
-          <div className="empty-state-icon">📖</div>
+          <div className="empty-state-icon"><NightCover /></div>
           <div className="empty-state-text">
             Henüz burada hiç masalın yok. Ana sayfaya git ve ilk masalını yazmaya başla!
           </div>
-          <Link to="/" className="chip" style={{ margin: '0 auto' }}>
+          <Link to="/create" className="chip" style={{ margin: '0 auto' }}>
             <Sparkles size={16} style={{ color: 'var(--secondary)' }} />
             <span>Yeni Masal Yaz</span>
           </Link>
@@ -267,8 +276,15 @@ export default function LibraryPage() {
 
   return (
     <>
-      <div className="library-header-bar">
-        <h2 className="section-label" style={{ marginBottom: 0 }}>📚 Sihirli Kitaplığım ({filteredAndSortedStories.length})</h2>
+      <div className="library-head">
+        <div>
+          <h1 className="library-title">Sihirli Kitaplığım</h1>
+          <p className="library-count">{filteredAndSortedStories.length} masal rafta seni bekliyor</p>
+        </div>
+        <Link to="/create" className="cta-btn library-new-btn">
+          <Plus size={20} />
+          <span>Yeni Masal Yaz</span>
+        </Link>
       </div>
 
       {/* Arama, Filtre ve Sıralama Paneli */}
@@ -285,37 +301,38 @@ export default function LibraryPage() {
         </div>
         
         <div className="filter-select-group">
-          <CustomSelect
-            value={selectedMood}
-            onChange={setSelectedMood}
-            minWidth={175}
-            options={[
-              { value: 'all',         label: 'Tüm Kategoriler 🎭' },
-              { value: 'magical',     label: 'Sihirli Masallar ✨' },
-              { value: 'adventure',   label: 'Macera Masalları 🗺️' },
-              { value: 'funny',       label: 'Eğlenceli Masallar 🎭' },
-              { value: 'romantic',    label: 'Duygusal Masallar 🌸' },
-              { value: 'educational', label: 'Eğitici Masallar 📚' },
-            ]}
-          />
 
           <CustomSelect
             value={sortBy}
             onChange={setSortBy}
             minWidth={165}
             options={[
-              { value: 'newest',  label: 'En Yeni 📅' },
-              { value: 'oldest',  label: 'En Eski ⏳' },
-              { value: 'popular', label: 'En Popüler 🔥' },
-              { value: 'likes',   label: 'En Çok Beğenilen ❤️' },
+              { value: 'newest',  label: 'En yeni' },
+              { value: 'oldest',  label: 'En eski' },
+              { value: 'popular', label: 'En popüler' },
+              { value: 'likes',   label: 'En çok beğenilen' },
             ]}
           />
         </div>
       </div>
       
+      <div className="library-mood-pills" role="group" aria-label="Temaya göre filtrele">
+        {MOOD_FILTERS.map(f => (
+          <button
+            key={f.value}
+            type="button"
+            aria-pressed={selectedMood === f.value}
+            className={`create-pill ${selectedMood === f.value ? 'selected' : ''}`}
+            onClick={() => setSelectedMood(f.value)}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
       {filteredAndSortedStories.length === 0 ? (
         <div className="empty-state" style={{ padding: '60px 40px', marginTop: '20px' }}>
-          <div className="empty-state-icon">🔍</div>
+          <div className="empty-state-icon"><Search size={40} /></div>
           <div className="empty-state-text">Aradığınız kriterlere uygun masal bulunamadı. Filtreleri temizlemeyi deneyin!</div>
           <button 
             className="chip" 
@@ -334,7 +351,6 @@ export default function LibraryPage() {
           <div className="library-grid">
             {currentStories.map(s => {
               const mood = s.mood || 'magical'
-              const emoji = MOOD_EMOJIS[mood] || '✨'
               const gradient = MOOD_GRADIENTS[mood] || MOOD_GRADIENTS.magical
               const category = MOOD_LABELS[mood] || 'Masal'
               
@@ -345,7 +361,7 @@ export default function LibraryPage() {
                     {s.imageUrl ? (
                       <img src={s.imageUrl} alt={s.title} />
                     ) : (
-                      <span>{emoji}</span>
+                      <NightCover />
                     )}
                     
                     {/* Silme Butonu */}
@@ -371,9 +387,9 @@ export default function LibraryPage() {
                       <span className="meta-divider">•</span>
                       <span className="meta-date">{formatDate(s.createdAt)}</span>
                       <span className="meta-divider">•</span>
-                      <span className="meta-comments">💬 {s.commentsCount || 0}</span>
+                      <span className="meta-comments">{s.commentsCount || 0} yorum</span>
                       <span className="meta-divider">•</span>
-                      <span className="meta-views">👁️ {s.views || 0}</span>
+                      <span className="meta-views">{s.views || 0} okunma</span>
                     </div>
 
                     <p className="lib-card-summary">
@@ -406,15 +422,15 @@ export default function LibraryPage() {
                     {/* Instagram Beğeni & İfade Barı */}
                     <div className="card-reaction-bar" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
                       <button className={`reaction-btn ${userReactions[s.id]?.like ? 'liked' : ''}`} onClick={(e) => handleLike(e, s.id)} title="Beğen">
-                        <span>❤️</span>
+                        <Heart size={15} />
                         <span>{s.likes || 0}</span>
                       </button>
                       <button className={`reaction-btn ${userReactions[s.id]?.thumbsUp ? 'liked' : ''}`} onClick={(e) => handleLikeThumbsUp(e, s.id)} title="Harika">
-                        <span>👍</span>
+                        <ThumbsUp size={15} />
                         <span>{s.likesThumbsUp || 0}</span>
                       </button>
                       <button className={`reaction-btn ${userReactions[s.id]?.stars ? 'liked' : ''}`} onClick={(e) => handleLikeStars(e, s.id)} title="Sihirli">
-                        <span>✨</span>
+                        <Sparkles size={15} />
                         <span>{s.likesStars || 0}</span>
                       </button>
                     </div>

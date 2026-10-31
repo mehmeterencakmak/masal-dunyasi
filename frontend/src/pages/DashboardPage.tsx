@@ -280,7 +280,7 @@ export default function DashboardPage() {
                       {myStories.map(story => (
                         <div key={story.id} className="db-story-card" style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: 'var(--shadow-sm)' }}>
                           <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-                            <div className="db-story-cover" style={{ width: '120px', height: '80px', borderRadius: 'var(--radius-sm)', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0, border: '1px solid var(--border)' }}>
+                            <div className="db-story-cover" style={{ width: '120px', height: '80px', borderRadius: 'var(--radius-sm)', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0, border: '1px solid var(--border)' }}>
                               {story.imageUrl ? (
                                 <img src={story.imageUrl} alt={story.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                               ) : (
@@ -389,7 +389,7 @@ export default function DashboardPage() {
                       {myLikes.map(story => (
                         <div key={story.id} className="lib-card" style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
                           <Link to={`/story/${story.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <div className="lib-card-cover" style={{ background: 'linear-gradient(135deg, var(--primary), var(--accent))' }}>
+                            <div className="lib-card-cover" style={{ background: '#1E2858' }}>
                               {story.imageUrl ? (
                                 <img src={story.imageUrl} alt={story.title} />
                               ) : (
@@ -539,7 +539,7 @@ export default function DashboardPage() {
                           style={{ width: '100%', padding: '12px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', outline: 'none', background: 'var(--bg-input)', color: 'var(--text-main)' }}
                         />
                       </div>
-                      <button type="submit" className="cta-btn" style={{ padding: '12px', background: 'linear-gradient(135deg, var(--secondary), var(--secondary-hover))' }} disabled={passwordLoading}>
+                      <button type="submit" className="cta-btn" style={{ padding: '12px', background: 'var(--primary)' }} disabled={passwordLoading}>
                         {passwordLoading ? <Loader2 className="spinner" size={16} /> : <Key size={16} />}
                         <span>Şifreyi Değiştir</span>
                       </button>

@@ -219,7 +219,7 @@ export default function AuthModal() {
                       }
                     }}
                     disabled={loading}
-                    style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(249, 115, 22, 0.25)', background: 'rgba(249, 115, 22, 0.05)', color: 'var(--secondary)', fontWeight: '700', cursor: 'pointer', fontSize: '13px' }}
+                    style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(242, 193, 78, 0.25)', background: 'rgba(242, 193, 78, 0.05)', color: 'var(--secondary)', fontWeight: '700', cursor: 'pointer', fontSize: '13px' }}
                   >
                     <Sparkles size={14} />
                     <span>Sihirli Dünyaya Misafir Olarak Gir</span>

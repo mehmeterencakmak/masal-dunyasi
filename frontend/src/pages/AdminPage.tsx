@@ -268,7 +268,7 @@ export default function AdminPage() {
       {/* İSTATİSTİKLER */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '32px' }}>
         <div style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '24px', display: 'flex', alignItems: 'center', gap: '20px', boxShadow: 'var(--shadow-sm)' }}>
-          <div style={{ background: 'rgba(2, 132, 199, 0.08)', color: 'var(--primary)', width: '56px', height: '56px', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: 'rgba(242, 193, 78, 0.08)', color: 'var(--primary)', width: '56px', height: '56px', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Users size={24} />
           </div>
           <div>
@@ -278,7 +278,7 @@ export default function AdminPage() {
         </div>
 
         <div style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '24px', display: 'flex', alignItems: 'center', gap: '20px', boxShadow: 'var(--shadow-sm)' }}>
-          <div style={{ background: 'rgba(249, 115, 22, 0.08)', color: 'var(--secondary)', width: '56px', height: '56px', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: 'rgba(242, 193, 78, 0.08)', color: 'var(--secondary)', width: '56px', height: '56px', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <BookOpen size={24} />
           </div>
           <div>
@@ -288,7 +288,7 @@ export default function AdminPage() {
         </div>
 
         <div style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '24px', display: 'flex', alignItems: 'center', gap: '20px', boxShadow: 'var(--shadow-sm)' }}>
-          <div style={{ background: 'rgba(16, 185, 129, 0.08)', color: 'var(--success)', width: '56px', height: '56px', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: 'rgba(242, 193, 78, 0.08)', color: 'var(--success)', width: '56px', height: '56px', borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <MessageSquare size={24} />
           </div>
           <div>
@@ -380,13 +380,13 @@ export default function AdminPage() {
                     <tr key={u.id} style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.2s' }}>
                       <td style={{ padding: '16px 24px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), var(--secondary))', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '14px' }}>
+                          <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--primary)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '14px' }}>
                             {u.name.slice(0, 1).toUpperCase()}
                           </div>
                           <div>
                             <div style={{ fontWeight: '700', color: 'var(--text-main)' }}>{u.name}</div>
                             <div style={{ fontSize: '11px', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 8px', borderRadius: '10px', marginTop: '3px', 
-                              background: u.status === 'BLOCKED' ? 'rgba(239, 68, 68, 0.08)' : 'rgba(16, 185, 129, 0.08)',
+                              background: u.status === 'BLOCKED' ? 'rgba(239, 68, 68, 0.08)' : 'rgba(242, 193, 78, 0.08)',
                               color: u.status === 'BLOCKED' ? 'var(--danger)' : 'var(--success)'
                             }}>
                               <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: u.status === 'BLOCKED' ? 'var(--danger)' : 'var(--success)' }}></span>
@@ -480,7 +480,7 @@ export default function AdminPage() {
                       <td style={{ padding: '16px 24px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <span style={{ fontSize: '11px', fontWeight: '700', padding: '2px 8px', borderRadius: '6px', width: 'fit-content',
-                            background: s.status === 'COMPLETED' ? 'rgba(16, 185, 129, 0.08)' : 'rgba(249, 115, 22, 0.08)',
+                            background: s.status === 'COMPLETED' ? 'rgba(242, 193, 78, 0.08)' : 'rgba(242, 193, 78, 0.08)',
                             color: s.status === 'COMPLETED' ? 'var(--success)' : 'var(--secondary)'
                           }}>
                             Süreç: {s.status}
@@ -493,7 +493,7 @@ export default function AdminPage() {
                             </span>
                           )}
                           <span style={{ fontSize: '11px', fontWeight: '700', padding: '2px 8px', borderRadius: '6px', width: 'fit-content',
-                            background: s.moderationStatus === 'BLOCKED' ? 'rgba(239, 68, 68, 0.15)' : (s.moderationStatus === 'REPORTED' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.08)'),
+                            background: s.moderationStatus === 'BLOCKED' ? 'rgba(239, 68, 68, 0.15)' : (s.moderationStatus === 'REPORTED' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(242, 193, 78, 0.08)'),
                             color: s.moderationStatus === 'BLOCKED' ? 'var(--danger)' : (s.moderationStatus === 'REPORTED' ? 'var(--warning)' : 'var(--success)')
                           }}>
                             Mod: {s.moderationStatus || 'APPROVED'}
@@ -592,7 +592,7 @@ export default function AdminPage() {
                             </span>
                           )}
                           <span style={{ fontSize: '11px', fontWeight: '700', padding: '2px 8px', borderRadius: '6px', width: 'fit-content',
-                            background: c.status === 'BLOCKED' ? 'rgba(239, 68, 68, 0.15)' : (c.status === 'REPORTED' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.08)'),
+                            background: c.status === 'BLOCKED' ? 'rgba(239, 68, 68, 0.15)' : (c.status === 'REPORTED' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(242, 193, 78, 0.08)'),
                             color: c.status === 'BLOCKED' ? 'var(--danger)' : (c.status === 'REPORTED' ? 'var(--warning)' : 'var(--success)')
                           }}>
                             Mod: {c.status || 'APPROVED'}

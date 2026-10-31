@@ -1,11 +1,12 @@
 // ─── HİKAYE SAYFASI — Üretilen masal + tüm agentlar ──────────────
 import { useEffect, useState, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { storyApi, agentApi, Story, JobStatus, Comment } from '../services/api'
 import { useToast } from '../components/ui/Toast'
 import { useAuth } from '../context/AuthContext'
 import ColoringCanvas from '../components/story/ColoringCanvas'
 import TaleBuddy from '../components/story/TaleBuddy'
+import NightCover from '../components/story/NightCover'
 import { 
   Volume2, 
   Image as ImageIcon, 
@@ -27,14 +28,6 @@ import {
 } from 'lucide-react'
 
 type AgentKey = 'tts' | 'image' | 'music' | 'video' | 'coloring'
-
-const MOOD_EMOJIS: Record<string, string> = {
-  magical: '✨',
-  adventure: '🗺️',
-  funny: '🎭',
-  romantic: '🌸',
-  educational: '📚',
-}
 
 const MOOD_LABELS: Record<string, string> = {
   magical: 'Mistik/Büyülü',
@@ -290,7 +283,12 @@ export default function StoryPage() {
     )
   }
 
-  const moodEmoji = story.mood ? MOOD_EMOJIS[story.mood] || '✨' : '✨'
+  // Bazı masallarda paragraflar boşluksuz birleşmiş geliyor; okunabilirlik için ayırıyoruz
+  const paragraphs = story.content
+    .replace(/([.!?…]["”’']?)(?=[A-ZÇĞİÖŞÜ])/g, '$1\n')
+    .split(/\n+/)
+    .map(p => p.trim())
+    .filter(Boolean)
   const moodLabel = story.mood ? MOOD_LABELS[story.mood] || 'Büyülü' : 'Büyülü'
 
   const renderStatus = (key: AgentKey) => {
@@ -330,12 +328,15 @@ export default function StoryPage() {
   return (
     <div className="story-layout">
       <div className="story-main">
+        <Link to="/library" className="story-back">
+          <ArrowLeft size={18} />
+          <span>Kütüphaneye dön</span>
+        </Link>
         <div className="story-header">
           <h1 className="story-title">{story.title || 'İsimsiz Masal'}</h1>
           
           <div className="story-meta">
             <div className="status-badge status-ready">
-              <span>{moodEmoji}</span>
               <span>{moodLabel}</span>
             </div>
             
@@ -375,11 +376,13 @@ export default function StoryPage() {
           {story.imageUrl ? (
             <img src={story.imageUrl} alt={story.title} />
           ) : (
-            <div className="story-image-placeholder">{moodEmoji}</div>
+            <div className="story-image-placeholder"><NightCover size={160} /></div>
           )}
         </div>
 
-        <div className="story-text-box">{story.content}</div>
+        <div className="story-text-box">
+          {paragraphs.map((p, i) => <p key={i}>{p}</p>)}
+        </div>
 
         {/* AI Masal Arkadaşı */}
         {isLoggedIn ? (

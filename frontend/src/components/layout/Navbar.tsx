@@ -1,26 +1,13 @@
 // ─── NAVBAR ───────────────────────────────────────────
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Sparkles, Compass, BookOpen, User, LogOut, Menu, X, Sun, Moon } from 'lucide-react'
+import { Sparkles, Compass, BookOpen, User, LogOut, Menu, X, Moon } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
 export default function Navbar() {
   const { pathname } = useLocation()
   const { isLoggedIn, user, openAuthModal, logout } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem('masal-dunyasi:theme') as 'light' | 'dark') || 'light'
-  })
-
-  // Theme Sync on load and change
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem('masal-dunyasi:theme', theme)
-  }, [theme])
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light')
-  }
 
   // Route değiştiğinde mobil menüyü kapat
   useEffect(() => {
@@ -35,7 +22,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <Link to="/" className="logo" onClick={() => setIsMobileMenuOpen(false)}>
-        <Sparkles className="logo-icon" size={24} style={{ color: 'var(--secondary)' }} />
+        <Moon className="logo-icon" size={26} style={{ color: 'var(--primary)' }} />
         <span>Masal Diyarı</span>
       </Link>
 
@@ -72,27 +59,6 @@ export default function Navbar() {
           <Sparkles size={16} />
           Sihirli Galeri
         </Link>
-        
-        {/* Tema Değiştirme Butonu */}
-        <button 
-          className="nav-theme-toggle" 
-          onClick={toggleTheme} 
-          title={theme === 'light' ? 'Gece Modu' : 'Gündüz Modu'}
-          style={{ 
-            background: 'none', 
-            border: 'none', 
-            cursor: 'pointer', 
-            color: 'var(--text-main)', 
-            display: 'flex', 
-            alignItems: 'center', 
-            padding: '10px',
-            borderRadius: '50%',
-            transition: 'all 0.2s ease',
-            marginLeft: '8px'
-          }}
-        >
-          {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-        </button>
 
         {isLoggedIn ? (
           <div className="nav-user-menu" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '12px' }}>
@@ -142,25 +108,6 @@ export default function Navbar() {
       {/* Mobile Drawer Navigation Overlay */}
       <div className={`nav-mobile-drawer ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="nav-mobile-links">
-          {/* Mobil Gece/Gündüz Modu Butonu */}
-          <button 
-            className="nav-mobile-link" 
-            onClick={toggleTheme}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', justifyContent: 'flex-start' }}
-          >
-            {theme === 'light' ? (
-              <>
-                <Moon size={18} />
-                <span>Gece Modu'na Geç</span>
-              </>
-            ) : (
-              <>
-                <Sun size={18} />
-                <span>Gündüz Modu'na Geç</span>
-              </>
-            )}
-          </button>
-
           <Link
             to="/"
             className={`nav-mobile-link ${pathname === '/' ? 'active' : ''}`}

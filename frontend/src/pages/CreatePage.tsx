@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { storyApi } from '../services/api'
 import { useToast } from '../components/ui/Toast'
 import { useAuth } from '../context/AuthContext'
-import { Wand2, Sparkles } from 'lucide-react'
+import { Sparkles, Shuffle, PenLine } from 'lucide-react'
 
 const HERO_OPTIONS = [
   { id: 'dragon', label: 'Ejderha 🐉', emoji: '🐉', desc: 'Ateş yerine sevgi saçan dostumuz', badge: 'Popüler' },
@@ -155,176 +155,186 @@ export default function CreatePage() {
     }
   }
 
+  const optionName = (o: { label: string; emoji: string }) => o.label.replace(o.emoji, '').trim()
+  const heroSummary = selectedHero === 'custom' ? (customHero.trim() || 'Kendi kahramanın') : optionName(HERO_OPTIONS.find(h => h.id === selectedHero)!)
+  const settingSummary = selectedSetting === 'custom' ? (customSetting.trim() || 'Kendi mekânın') : optionName(SETTING_OPTIONS.find(s => s.id === selectedSetting)!)
+  const moodSummary = optionName(MOOD_OPTIONS.find(m => m.id === selectedMood)!)
+  const langSummary = optionName(LANG_OPTIONS.find(l => l.id === selectedLanguage)!)
+
   return (
-    <>
-      <div className="hero-badge-container">
-        <span className="hero-badge" style={{ background: 'rgba(249, 115, 22, 0.08)', color: 'var(--secondary)', borderColor: 'rgba(249, 115, 22, 0.15)' }}>
-          <Sparkles size={14} style={{ color: 'var(--secondary)' }} />
-          Masal Sihirbazı
-        </span>
+    <div className="create-page">
+      <div className="create-header">
+        <div className="create-header-text">
+          <p className="create-eyebrow">Sihirli masal odası</p>
+          <h1 className="create-title">Bu geceki masalı birlikte kuralım</h1>
+          <p className="create-sub">Birkaç seçim yap, gerisini yapay zekaya bırak. Her adımda "Kendin Yaz" ile tamamen özgür olabilirsin.</p>
+        </div>
+        <button type="button" className="create-random-btn" onClick={handleRandomize} disabled={loading}>
+          <Shuffle size={20} />
+          <span>Rastgele Sihir</span>
+        </button>
       </div>
-      
-      <h1 className="hero-title" style={{ fontSize: '48px', marginBottom: '16px' }}>
-        Kendi Masalını Tasarla!
-      </h1>
-      <p className="hero-sub" style={{ marginBottom: '40px' }}>
-        Aşağıdaki seçenekleri kullanarak hayalindeki masalın kahramanını, dünyasını ve konusunu seç. Yapay zeka senin için yazsın!
-      </p>
 
-      <button className="magic-random-btn" onClick={handleRandomize} disabled={loading} style={{ background: 'rgba(249, 115, 22, 0.05)', color: 'var(--secondary)' }}>
-        <Sparkles size={16} />
-        <span>Rastgele Sihir (Şansımı Denemek İstiyorum)</span>
-      </button>
+      <div className="create-layout">
+        <div className="create-form">
 
-      <div className="prompt-box">
-        <div className="customizer-container">
-          
-          <div className="customizer-group">
-            <div className="customizer-title">
-              <span>🦸 Kahramanını Seç</span>
-            </div>
-            <div className="option-grid">
+          <fieldset className="create-step">
+            <legend className="create-step-title"><span className="create-step-num">1</span>Kahramanını seç</legend>
+            <div className="create-option-grid">
               {HERO_OPTIONS.map(h => (
-                <div 
-                  key={h.id} 
-                  className={`option-card ${selectedHero === h.id ? 'selected' : ''}`}
+                <button
+                  type="button"
+                  key={h.id}
+                  aria-pressed={selectedHero === h.id}
+                  className={`create-option ${h.id === 'custom' ? 'is-custom' : ''} ${selectedHero === h.id ? 'selected' : ''}`}
                   onClick={() => setSelectedHero(h.id)}
+                  disabled={loading}
                 >
-                  {h.badge && <span className="card-badge">{h.badge}</span>}
-                  <div className="option-emoji-wrapper">
-                    <span className="option-emoji">{h.emoji}</span>
-                  </div>
-                  <span className="option-label">{h.label.split(' ')[0]}</span>
-                  <span className="option-desc">{h.desc}</span>
-                </div>
+                  <span className="create-option-head">
+                    <span className="create-option-name">
+                      {h.id === 'custom' && <PenLine size={18} />}
+                      {optionName(h)}
+                    </span>
+                    {h.badge && <span className="create-option-badge">{h.badge}</span>}
+                  </span>
+                  <span className="create-option-desc">{h.desc}</span>
+                </button>
               ))}
             </div>
             {selectedHero === 'custom' && (
-              <div className="custom-input-box">
-                <input
-                  type="text"
-                  className="custom-input"
-                  placeholder="Kendi kahramanını yaz (örn: Konuşan bir çilek, haylaz bir bulut)..."
-                  value={customHero}
-                  onChange={e => setCustomHero(e.target.value)}
-                  maxLength={60}
-                  disabled={loading}
-                />
-              </div>
+              <input
+                type="text"
+                className="create-custom-input"
+                aria-label="Kendi kahramanın"
+                placeholder="Kendi kahramanını yaz (örn: Konuşan bir çilek, haylaz bir bulut)..."
+                value={customHero}
+                onChange={e => setCustomHero(e.target.value)}
+                maxLength={60}
+                disabled={loading}
+              />
             )}
-          </div>
+          </fieldset>
 
-          <div className="customizer-group">
-            <div className="customizer-title">
-              <span>🏰 Masal Nerede Geçsin?</span>
-            </div>
-            <div className="option-grid">
+          <fieldset className="create-step">
+            <legend className="create-step-title"><span className="create-step-num">2</span>Masal nerede geçsin?</legend>
+            <div className="create-option-grid">
               {SETTING_OPTIONS.map(s => (
-                <div 
-                  key={s.id} 
-                  className={`option-card ${selectedSetting === s.id ? 'selected' : ''}`}
+                <button
+                  type="button"
+                  key={s.id}
+                  aria-pressed={selectedSetting === s.id}
+                  className={`create-option ${s.id === 'custom' ? 'is-custom' : ''} ${selectedSetting === s.id ? 'selected' : ''}`}
                   onClick={() => setSelectedSetting(s.id)}
+                  disabled={loading}
                 >
-                  {s.badge && <span className="card-badge">{s.badge}</span>}
-                  <div className="option-emoji-wrapper">
-                    <span className="option-emoji">{s.emoji}</span>
-                  </div>
-                  <span className="option-label">{s.label.split(' ')[0]}</span>
-                  <span className="option-desc">{s.desc}</span>
-                </div>
+                  <span className="create-option-head">
+                    <span className="create-option-name">
+                      {s.id === 'custom' && <PenLine size={18} />}
+                      {optionName(s)}
+                    </span>
+                    {s.badge && <span className="create-option-badge">{s.badge}</span>}
+                  </span>
+                  <span className="create-option-desc">{s.desc}</span>
+                </button>
               ))}
             </div>
             {selectedSetting === 'custom' && (
-              <div className="custom-input-box">
-                <input
-                  type="text"
-                  className="custom-input"
-                  placeholder="Kendi mekanını yaz (örn: Uçan bir korsan gemisi, dev şeker şatosu)..."
-                  value={customSetting}
-                  onChange={e => setCustomSetting(e.target.value)}
-                  maxLength={60}
-                  disabled={loading}
-                />
-              </div>
+              <input
+                type="text"
+                className="create-custom-input"
+                aria-label="Kendi mekânın"
+                placeholder="Kendi mekanını yaz (örn: Uçan bir korsan gemisi, dev şeker şatosu)..."
+                value={customSetting}
+                onChange={e => setCustomSetting(e.target.value)}
+                maxLength={60}
+                disabled={loading}
+              />
             )}
-          </div>
+          </fieldset>
 
-          <div className="customizer-group">
-            <div className="customizer-title">
-              <span>✨ Masalın Duygusu / Teması</span>
-            </div>
-            <div className="option-grid">
+          <fieldset className="create-step">
+            <legend className="create-step-title"><span className="create-step-num">3</span>Masalın havası</legend>
+            <div className="create-pills">
               {MOOD_OPTIONS.map(m => (
-                <div 
-                  key={m.id} 
-                  className={`option-card ${selectedMood === m.id ? 'selected' : ''}`}
+                <button
+                  type="button"
+                  key={m.id}
+                  title={m.desc}
+                  aria-pressed={selectedMood === m.id}
+                  className={`create-pill ${selectedMood === m.id ? 'selected' : ''}`}
                   onClick={() => setSelectedMood(m.id)}
+                  disabled={loading}
                 >
-                  <div className="option-emoji-wrapper">
-                    <span className="option-emoji">{m.emoji}</span>
-                  </div>
-                  <span className="option-label">{m.label.split(' ')[0]}</span>
-                  <span className="option-desc">{m.desc}</span>
-                </div>
+                  {optionName(m)}
+                </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
-          <div className="customizer-group">
-            <div className="customizer-title">
-              <span>🌐 Masalın Dili</span>
-            </div>
-            <div className="option-grid">
+          <fieldset className="create-step">
+            <legend className="create-step-title"><span className="create-step-num">4</span>Masalın dili</legend>
+            <div className="create-segmented">
               {LANG_OPTIONS.map(l => (
-                <div 
-                  key={l.id} 
-                  className={`option-card ${selectedLanguage === l.id ? 'selected' : ''}`}
+                <button
+                  type="button"
+                  key={l.id}
+                  aria-pressed={selectedLanguage === l.id}
+                  className={selectedLanguage === l.id ? 'selected' : ''}
                   onClick={() => setSelectedLanguage(l.id)}
+                  disabled={loading}
                 >
-                  <div className="option-emoji-wrapper">
-                    <span className="option-emoji">{l.emoji}</span>
-                  </div>
-                  <span className="option-label">{l.label.split(' ')[0]}</span>
-                  <span className="option-desc">{l.desc}</span>
-                </div>
+                  {optionName(l)}
+                </button>
               ))}
             </div>
+          </fieldset>
+
+          <div className="create-step">
+            <label htmlFor="create-detail" className="create-step-title">
+              <span className="create-step-num">5</span>Özel bir detay ekle <span className="create-optional">(isteğe bağlı)</span>
+            </label>
+            <textarea
+              id="create-detail"
+              className="create-textarea"
+              rows={4}
+              placeholder="Örn. Kahramanımız sihirli bir ayna bulur ve aynanın içinde yeni bir arkadaşla karşılaşır…"
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+              maxLength={500}
+              disabled={loading}
+            />
           </div>
         </div>
 
-        <div className="customizer-title" style={{ marginTop: '24px', marginBottom: '8px' }}>
-          <span>✍️ Eklemek İstediğin Özel Macera Detayı (Opsiyonel)</span>
-        </div>
-        <div className="prompt-input-wrapper">
-          <textarea
-            className="prompt-input"
-            placeholder="Örnek: Kahramanımız orada sihirli bir ayna bulur ve aynanın içine girerek yeni arkadaşıyla karşılaşır..."
-            value={prompt}
-            onChange={e => setPrompt(e.target.value)}
-            maxLength={500}
+        <aside className="create-summary" aria-label="Masal özeti">
+          <h2 className="create-summary-title">Bu geceki masal</h2>
+          <dl className="create-summary-list">
+            <div><dt>Kahraman</dt><dd>{heroSummary}</dd></div>
+            <div><dt>Mekân</dt><dd>{settingSummary}</dd></div>
+            <div><dt>Hava</dt><dd>{moodSummary}</dd></div>
+            <div><dt>Dil</dt><dd>{langSummary}</dd></div>
+          </dl>
+          <button
+            type="button"
+            className="cta-btn create-submit"
+            onClick={handleGenerate}
             disabled={loading}
-          />
-        </div>
-
-        <button
-          className="cta-btn"
-          onClick={handleGenerate}
-          disabled={loading}
-          style={{ marginTop: '30px' }}
-        >
-          {loading ? (
-            <>
-              <span className="spinner" />
-              <span>Masal Yazılıyor, Sihir Devrede...</span>
-            </>
-          ) : (
-            <>
-              <Wand2 size={20} />
-              <span>Sihirli Masalımı Oluştur</span>
-            </>
-          )}
-        </button>
+          >
+            {loading ? (
+              <>
+                <span className="spinner" />
+                <span>Masal yazılıyor…</span>
+              </>
+            ) : (
+              <>
+                <Sparkles size={20} />
+                <span>Masalımı Oluştur</span>
+              </>
+            )}
+          </button>
+          <p className="create-summary-note">Masal yaklaşık bir dakikada hazır olur; kapak resmi ve seslendirme ardından eklenir.</p>
+        </aside>
       </div>
-    </>
+    </div>
   )
 }

@@ -28,8 +28,8 @@ const BUDDIES = {
     name: 'Şirin Ejderha',
     emoji: '🐉',
     color: '#f97316', // turuncu
-    bgColor: 'rgba(249, 115, 22, 0.05)',
-    borderColor: 'rgba(249, 115, 22, 0.2)',
+    bgColor: 'rgba(242, 193, 78, 0.05)',
+    borderColor: 'rgba(242, 193, 78, 0.2)',
     greeting: 'Heeey! Selam! Ben Şirin Ejderha! Hikaye bitti ama eğlence bitmedi! Birlikte masal hakkında konuşalım mı? Sence kahramanımız sihirli ormanda uçarken neler hissetti? Uçmak çok havalı değil mi? Yeeey! 🐉🔥'
   }
 }
