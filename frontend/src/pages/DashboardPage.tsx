@@ -389,7 +389,7 @@ export default function DashboardPage() {
                       {myLikes.map(story => (
                         <div key={story.id} className="lib-card" style={{ background: 'var(--bg-card-solid)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
                           <Link to={`/story/${story.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <div className="lib-card-cover" style={{ background: '#1E2858' }}>
+                            <div className="lib-card-cover" style={{ background: 'var(--bg-card-hover)' }}>
                               {story.imageUrl ? (
                                 <img src={story.imageUrl} alt={story.title} />
                               ) : (

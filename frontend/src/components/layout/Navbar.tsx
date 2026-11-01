@@ -1,13 +1,36 @@
 // ─── NAVBAR ───────────────────────────────────────────
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Sparkles, Compass, BookOpen, User, LogOut, Menu, X, Moon } from 'lucide-react'
+import { Sparkles, Compass, BookOpen, User, LogOut, Menu, X, Moon, Sun } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+
+type Theme = 'dark' | 'light'
+const THEME_KEY = 'masal-diyari:theme'
 
 export default function Navbar() {
   const { pathname } = useLocation()
   const { isLoggedIn, user, openAuthModal, logout } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  // Varsayılan tema Gece Masalı; index.html sayfa açılırken kayıtlı temayı zaten uygular
+  const [theme, setTheme] = useState<Theme>(() => {
+    try {
+      return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark'
+    } catch {
+      return 'dark'
+    }
+  })
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    try {
+      localStorage.setItem(THEME_KEY, theme)
+    } catch {
+      // Gizli sekmede depolama kapalı olabilir; tema yine de bu oturumda geçerli
+    }
+  }, [theme])
+
+  const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))
+  const themeLabel = theme === 'dark' ? 'Gündüz moduna geç' : 'Gece Masalı moduna geç'
 
   // Route değiştiğinde mobil menüyü kapat
   useEffect(() => {
@@ -60,6 +83,10 @@ export default function Navbar() {
           Sihirli Galeri
         </Link>
 
+        <button type="button" className="nav-theme-toggle" onClick={toggleTheme} aria-label={themeLabel} title={themeLabel}>
+          {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+
         {isLoggedIn ? (
           <div className="nav-user-menu" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '12px' }}>
             {user?.role === 'ADMIN' && (
@@ -108,6 +135,16 @@ export default function Navbar() {
       {/* Mobile Drawer Navigation Overlay */}
       <div className={`nav-mobile-drawer ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="nav-mobile-links">
+          <button
+            type="button"
+            className="nav-mobile-link"
+            onClick={toggleTheme}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', width: '100%', justifyContent: 'flex-start', font: 'inherit' }}
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            <span>{themeLabel}</span>
+          </button>
+
           <Link
             to="/"
             className={`nav-mobile-link ${pathname === '/' ? 'active' : ''}`}

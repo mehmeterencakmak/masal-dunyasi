@@ -21,11 +21,11 @@ import {
 } from 'lucide-react'
 
 const MOOD_GRADIENTS: Record<string, string> = {
-  magical: '#1E2858',
-  adventure: '#1E2858',
-  funny: '#1E2858',
-  romantic: '#1E2858',
-  educational: '#1E2858',
+  magical: 'var(--bg-card-hover)',
+  adventure: 'var(--bg-card-hover)',
+  funny: 'var(--bg-card-hover)',
+  romantic: 'var(--bg-card-hover)',
+  educational: 'var(--bg-card-hover)',
 }
 
 const MOOD_LABELS: Record<string, string> = {
@@ -544,7 +544,7 @@ export default function HomePage() {
                               <span 
                                 key={star} 
                                 onClick={() => setEditingFeedbackRating(star)}
-                                style={{ color: star <= editingFeedbackRating ? 'var(--primary)' : '#3A4680' }}
+                                style={{ color: star <= editingFeedbackRating ? 'var(--primary)' : 'var(--border-strong)' }}
                               >
                                 ★
                               </span>
@@ -710,7 +710,7 @@ export default function HomePage() {
                             key={star} 
                             onClick={() => setFeedbackRating(star)}
                             style={{ 
-                              color: star <= feedbackRating ? 'var(--primary)' : '#3A4680',
+                              color: star <= feedbackRating ? 'var(--primary)' : 'var(--border-strong)',
                               transition: 'color 0.2s',
                               transform: 'scale(1)',
                             }}

@@ -376,7 +376,7 @@ export default function StoryPage() {
           {story.imageUrl ? (
             <img src={story.imageUrl} alt={story.title} />
           ) : (
-            <div className="story-image-placeholder"><NightCover size={160} /></div>
+            <div className="story-image-placeholder"><NightCover size={160} cut="var(--cover-bg)" /></div>
           )}
         </div>
 

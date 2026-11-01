@@ -23,11 +23,11 @@ import {
 } from 'lucide-react'
 
 const MOOD_GRADIENTS: Record<string, string> = {
-  magical: '#1E2858',
-  adventure: '#1E2858',
-  funny: '#1E2858',
-  romantic: '#1E2858',
-  educational: '#1E2858',
+  magical: 'var(--bg-card-hover)',
+  adventure: 'var(--bg-card-hover)',
+  funny: 'var(--bg-card-hover)',
+  romantic: 'var(--bg-card-hover)',
+  educational: 'var(--bg-card-hover)',
 }
 
 const MOOD_FILTERS = [
